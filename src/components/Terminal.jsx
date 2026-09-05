@@ -7,47 +7,47 @@ import OutputHelp from "./outputs/OutputHelp";
 import OutputNotFound from "./outputs/OutputNotFound";
 
 const Terminal = () => {
-  const [isInitial, setIsInitial] = useState(true);
+  const [isInitialRender, setInitialRender] = useState(true);
   const [entryId, setId] = useState(0);
   const [cmdEntries, setCmdEntries] = useState([]);
+  const [userCommand, setUserCommand] = useState("");
 
-  const [command, setCommand] = useState("");
-  function onChange(evt) {
-    setCommand(evt.target.value);
+  function handleUserCmdChange(evt) {
+    setUserCommand(evt.target.value);
   }
-  function onSubmit(evt) {
+  function onCmdSubmit(evt) {
     evt.preventDefault();
-    if (command.length <= 0) {
+    if (userCommand.length <= 0) {
       console.log("blank fire");
-    } else if (command === "clear") {
+    } else if (userCommand === "clear") {
       setCmdEntries([]);
       setId(0);
-      setCommand("");
-      setIsInitial(false);
+      setUserCommand("");
+      setInitialRender(false);
     } else {
       setCmdEntries([
         ...cmdEntries,
         {
           id: entryId,
-          cmd: command,
+          cmd: userCommand,
           commandValid: true,
-          output: parseCommand(command),
+          output: parseCommand(userCommand),
         },
       ]);
 
       setId(entryId + 1);
-      setCommand("");
+      setUserCommand("");
     }
   }
 
   return (
     <div className="terminal-container">
-      <PreLoader initialRender={isInitial} />
+      <PreLoader initialRender={isInitialRender} />
       <History history={cmdEntries} />
       <Promptline
-        handleSubmit={onSubmit}
-        value={command}
-        handleChange={onChange}
+        handleCmdSubmit={onCmdSubmit}
+        inputCmd={userCommand}
+        handleInputCmdChange={handleUserCmdChange}
       />
     </div>
   );
