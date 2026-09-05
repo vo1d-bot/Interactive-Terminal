@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+.terminal-container {
+  @apply h-[80vh] w-[75vw] bg-gray-200 px-4 py-2 rounded-sm font-mono overflow-y-auto scrollbar-thin outline-2;
+}
+
+.shape-style {
+  @apply h-2.5 w-2.5 bg-cyan-600 rounded-full;
+}
