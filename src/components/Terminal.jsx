@@ -3,12 +3,10 @@ import { useState } from "react";
 import History from "./History";
 import Promptline from "./Promptline";
 import ascii from "/src/assets/ascii-art.txt?raw";
-import OutputHelp from "./outputs/OutputHelp";
-import OutputNotFound from "./outputs/OutputNotFound";
 
 const Terminal = () => {
   const [isInitialRender, setInitialRender] = useState(true);
-  const [entryId, setId] = useState(0);
+  const [entryId, setEntryId] = useState(0);
   const [cmdEntries, setCmdEntries] = useState([]);
   const [userCommand, setUserCommand] = useState("");
 
@@ -17,11 +15,12 @@ const Terminal = () => {
   }
   function onCmdSubmit(evt) {
     evt.preventDefault();
+
     if (userCommand.length <= 0) {
       console.log("blank fire");
     } else if (userCommand === "clear") {
       setCmdEntries([]);
-      setId(0);
+      setEntryId(0);
       setUserCommand("");
       setInitialRender(false);
     } else {
@@ -30,13 +29,13 @@ const Terminal = () => {
         {
           id: entryId,
           cmd: userCommand,
-          commandValid: true,
           output: parseCommand(userCommand),
         },
       ]);
 
-      setId(entryId + 1);
+      setEntryId(entryId + 1);
       setUserCommand("");
+      console.log(cmdEntries);
     }
   }
 
@@ -64,16 +63,30 @@ const PreLoader = ({ initialRender }) => {
   );
 };
 
-function parseCommand(cmd) {
+function parseCommand(input) {
+  const cmd = input.trim().toLowerCase();
+
   switch (cmd) {
     case "help":
-      return <OutputHelp />;
+      return { isValid: true, render: "HELP" };
 
-    case "clear":
-      return;
+    case "exit":
+      return { isValid: true, render: "!FOUND" };
+
+    case "whois":
+      return { isValid: true, render: "!FOUND" };
+
+    case "contacts":
+      return { isValid: true, render: "!FOUND" };
+
+    case "projects":
+      return { isValid: true, render: "!FOUND" };
+
+    case "gallery":
+      return { isValid: true, render: "!FOUND" };
 
     default:
-      return <OutputNotFound />;
+      return { isValid: false, render: "!FOUND" };
   }
 }
 

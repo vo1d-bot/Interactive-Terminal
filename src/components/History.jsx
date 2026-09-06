@@ -1,16 +1,31 @@
+import OutputHelp from "../components/outputs/OutputHelp";
+import OutputNotFound from "../components/outputs/OutputNotFound";
+
 const History = ({ history }) => {
   return (
     <>
       {history.map((ce) => {
         return (
           <div key={ce.id}>
-            <OldPrompt success={ce.commandValid} prompt={ce.cmd} />{ce.output}
+            <OldPrompt success={ce.output.isValid} prompt={ce.cmd} />
+            {renderOutput(ce.output.render)}
           </div>
         );
       })}
     </>
   );
 };
+
+function renderOutput(key) {
+  console.log(key);
+  switch (key) {
+    case "HELP":
+      return <OutputHelp />;
+
+    default:
+      return <OutputNotFound />;
+  }
+}
 
 const OldPrompt = ({ success, prompt }) => {
   return (
