@@ -2,58 +2,38 @@ import { useState } from "react";
 
 import History from "./History";
 import Promptline from "./Promptline";
+
 import ascii from "/src/assets/ascii-art.txt?raw";
+import { parseCommand } from "../utils/parser";
 
 const Terminal = () => {
-  const [isInitialRender, setInitialRender] = useState(true);
-  const [entryId, setEntryId] = useState(0);
-  const [cmdEntries, setCmdEntries] = useState([]);
-  const [userCommand, setUserCommand] = useState("");
+  const [cmdLog, setCmdLog] = useState([]);
 
-  function handleUserCmdChange(evt) {
-    setUserCommand(evt.target.value);
-  }
-  function onCmdSubmit(evt) {
-    evt.preventDefault();
+  const handleSubmit = (cmdInput) => {
+    const cmd = cmdInput.trim().toLowerCase();
 
-    if (userCommand.length <= 0) {
-      console.log("blank fire");
-    } else if (userCommand === "clear") {
-      setCmdEntries([]);
-      setEntryId(0);
-      setUserCommand("");
-      setInitialRender(false);
+    if (cmd.length === 0) return;
+    else if (cmd === "clear") {
+      setCmdLog([]);
     } else {
-      setCmdEntries([
-        ...cmdEntries,
-        {
-          id: entryId,
-          cmd: userCommand,
-          output: parseCommand(userCommand),
-        },
+      const { isValid, render } = parseCommand(cmd);
+      setCmdLog((prevLog) => [
+        ...prevLog,
+        { id: crypto.randomUUID(), input: cmd, success: isValid, output: render },
       ]);
-
-      setEntryId(entryId + 1);
-      setUserCommand("");
-      console.log(cmdEntries);
     }
-  }
+  };
 
   return (
     <div className="terminal-container">
-      <PreLoader initialRender={isInitialRender} />
-      <History history={cmdEntries} />
-      <Promptline
-        handleCmdSubmit={onCmdSubmit}
-        inputCmd={userCommand}
-        handleInputCmdChange={handleUserCmdChange}
-      />
+      <PreLoader />
+      <History history={cmdLog} />
+      <Promptline handleSubmit={handleSubmit} />
     </div>
   );
 };
 
-const PreLoader = ({ initialRender }) => {
-  if (!initialRender) return;
+const PreLoader = () => {
   return (
     <div className="pb-4">
       <pre>{ascii}</pre>
@@ -62,32 +42,5 @@ const PreLoader = ({ initialRender }) => {
     </div>
   );
 };
-
-function parseCommand(input) {
-  const cmd = input.trim().toLowerCase();
-
-  switch (cmd) {
-    case "help":
-      return { isValid: true, render: "HELP" };
-
-    case "exit":
-      return { isValid: true, render: "!FOUND" };
-
-    case "whois":
-      return { isValid: true, render: "!FOUND" };
-
-    case "contacts":
-      return { isValid: true, render: "!FOUND" };
-
-    case "projects":
-      return { isValid: true, render: "!FOUND" };
-
-    case "gallery":
-      return { isValid: true, render: "!FOUND" };
-
-    default:
-      return { isValid: false, render: "!FOUND" };
-  }
-}
 
 export default Terminal;

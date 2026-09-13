@@ -4,11 +4,17 @@ import OutputNotFound from "../components/outputs/OutputNotFound";
 const History = ({ history }) => {
   return (
     <>
-      {history.map((ce) => {
+      {history.map((log) => {
         return (
-          <div key={ce.id}>
-            <OldPrompt success={ce.output.isValid} prompt={ce.cmd} />
-            {renderOutput(ce.output.render)}
+          <div key={log.id}>
+            <div className="flex gap-2 items-center">
+              <div
+                className={`h-2.5 w-2.5 rounded-full ${log.success ? "bg-green-600" : "bg-red-600"}`}
+              ></div>
+              <p className="prompt-symbol">$</p>
+              <p className="old-prompt font-semibold">{log.input}</p>
+            </div>
+            {renderOutput(log.output)}
           </div>
         );
       })}
@@ -17,7 +23,6 @@ const History = ({ history }) => {
 };
 
 function renderOutput(key) {
-  console.log(key);
   switch (key) {
     case "HELP":
       return <OutputHelp />;
@@ -26,17 +31,5 @@ function renderOutput(key) {
       return <OutputNotFound />;
   }
 }
-
-const OldPrompt = ({ success, prompt }) => {
-  return (
-    <div className="flex gap-2 items-center">
-      <div
-        className={`h-2.5 w-2.5 rounded-full ${success ? "bg-green-600" : "bg-red-600"}`}
-      ></div>
-      <p className="prompt-symbol">$</p>
-      <p className="old-prompt font-semibold">{prompt}</p>
-    </div>
-  );
-};
 
 export default History;
