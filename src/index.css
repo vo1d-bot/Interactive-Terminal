@@ -1,7 +1,21 @@
+/* font-family: "IBM Plex Mono", monospace; */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
+/* font-family: "VT323", monospace; */
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+
 @import "tailwindcss";
 
+@theme {
+  --default-font-family: monospace;
+  --text-base: 18px;
+}
+
+@utility retro {
+  @apply bg-zinc-950 text-green-600;
+}
+
 .terminal-container {
-  @apply h-[80vh] mx-2 bg-gray-200 px-4 py-2 rounded-sm font-mono overflow-y-auto scrollbar-none outline-2;
+  @apply h-[80vh] w-[90vw] mx-2 px-4 py-2 text-base rounded-sm overflow-y-scroll scrollbar-none bg-gray-200 text-zinc-950;
 }
 
 .shape-style {
